@@ -1,82 +1,38 @@
 # InventoryPro - Inventory Management System
 
 A modern desktop inventory management system built with **C#**, **.NET 10**, **WPF**, and **SQLite** using the **MVVM architecture**, **Repository Pattern**, and **Entity Framework Core**.
-
-This project was designed as a portfolio-ready application that demonstrates clean architecture, authentication, CRUD operations, database management, and desktop UI development with WPF.
-
----
-
-## Features
-
-### Authentication & Security
-
-* User login and self-registration
-* BCrypt password hashing
-* Role-based access (Admin / User)
-* Session management
-
-### Dashboard
-
-* Total products count
-* Low stock alerts
-* Categories and suppliers overview
-* Recent stock transaction history
-
-### Product Management
-
-* Create, update, delete, and search products
-* SKU management
-* Product pricing and stock thresholds
-* Category and supplier relationships
-* Soft delete support to preserve transaction history
-* Low stock highlighting
-
-### Category Management
-
-* Full CRUD operations
-* Duplicate category validation
-* Prevents deletion when products are linked
-
-### Supplier Management
-
-* Supplier contact management
-* Email, phone number, and address support
-
-### Stock Transactions
-
-* Stock In
-* Stock Out
-* Inventory Adjustments
-* Automatic quantity updates
-* Prevents negative inventory
+This project was designed as an application that demonstrates clean architecture, authentication, CRUD operations, database management, and desktop UI development with WPF.
 
 ---
 
 ## Tech Stack
 
-| Layer          | Technology                        |
-| -------------- | --------------------------------- |
-| UI Framework   | WPF (.NET 10)                     |
-| Architecture   | MVVM Pattern                      |
-| Database       | SQLite                            |
-| ORM            | Entity Framework Core 10          |
-| Authentication | BCrypt.Net-Next                   |
-| Language       | C# 13                             |
-| Patterns       | Repository Pattern, Service Layer |
+| Layer      | Technology                              |
+|------------|----------------------------------------|
+| UI         | WPF (.NET 10), MVVM Pattern             |
+| Database   | SQLite via Entity Framework Core 10     |
+| Security   | BCrypt password hashing                 |
+| Pattern    | Repository Pattern + Service Layer      |
+| Language   | C# 13 with async/await throughout       |
 
 ---
 
-## Prerequisites
+## Features
 
-Before running the project, install the following:
-
-* [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-* Visual Studio 2022 (17.8+) or newer
-* Visual Studio workload:
-
-  * `.NET Desktop Development`
+- **Authentication** — Login with BCrypt-hashed passwords, role-based access (Admin/User)
+- **Dashboard** — Live stats: total products, low stock alerts, categories, suppliers, recent transactions
+- **Products** — Full CRUD with SKU, pricing, stock thresholds, category & supplier linking
+- **Categories** — Manage product categories with duplicate name validation
+- **Suppliers** — Manage supplier contacts and details
+- **Stock Transactions** — Record Stock In / Stock Out / Adjustments with automatic quantity updates
 
 ---
+
+## Getting Started
+
+### Prerequisites
+- Visual Studio 2026
+- .NET 10 SDK
 
 ## Clone the Repository
 
@@ -89,12 +45,6 @@ cd InventoryManagementSystem
 
 ## Run the Application
 
-### Using Visual Studio
-
-1. Open `InventoryManagementSystem.sln`
-2. Set `InventoryApp` as the startup project
-3. Press `F5` to build and run
-
 ### Using the Terminal
 
 ```bash
@@ -104,139 +54,55 @@ dotnet build
 dotnet run
 ```
 
----
+     **OR**
 
-## First Launch
+### Using Visual Studio
 
-When the application starts for the first time, it will automatically:
-
-* Create the SQLite database
-* Generate the database schema
-* Seed default categories
-* Create the default admin account
+1. Open `InventoryManagementSystem.sln`
+2. Set `InventoryApp` as the startup project
+3. Press `F5` to build and run
 
 ---
 
-## Default Admin Credentials
+4. Login with default credentials:
+   - **Username:** `admin`
+   - **Password:** `Admin@123`
+   
+       **OR**
 
-| Username | Password  | Role  |
-| -------- | --------- | ----- |
-| admin    | Admin@123 | Admin |
+    Register as a new user
 
----
 
-## Database Location
-
-```text
-%LocalAppData%\InventoryApp\inventory.db
-```
+> The SQLite database is auto-created at `%LocalAppData%\InventoryApp\inventory.db` on first run.
 
 ---
 
 ## Project Structure
 
 ```text
-InventoryManagementSystem/
-│
-├── InventoryApp/
-│   ├── Models/
-│   │   ├── User.cs
-│   │   ├── Product.cs
-│   │   ├── Category.cs
-│   │   ├── Supplier.cs
-│   │   └── StockTransaction.cs
-│   │
-│   ├── Data/
-│   │   ├── AppDbContext.cs
-│   │   ├── IRepository.cs
-│   │   ├── BaseRepository.cs
-│   │   └── Repositories/
-│   │
-│   ├── Services/
-│   │   ├── AuthService.cs
-│   │   └── SessionManager.cs
-│   │
-│   ├── ViewModels/
-│   │   ├── BaseViewModel.cs
-│   │   ├── RelayCommand.cs
-│   │   ├── LoginViewModel.cs
-│   │   ├── MainViewModel.cs
-│   │   ├── DashboardViewModel.cs
-│   │   ├── ProductsViewModel.cs
-│   │   ├── CategoriesViewModel.cs
-│   │   ├── SuppliersViewModel.cs
-│   │   └── StockViewModel.cs
-│   │
-│   └── Views/
-│       ├── LoginWindow.xaml
-│       ├── MainWindow.xaml
-│       ├── DashboardView.xaml
-│       ├── ProductsView.xaml
-│       ├── CategoriesView.xaml
-│       ├── SuppliersView.xaml
-│       └── StockView.xaml
-│
-├── InventoryManagementSystem.sln
-├── .gitignore
-└── README.md
+InventoryApp/
+├── Models/          # EF Core entity classes
+├── Data/            # DbContext, generic repository, specific repositories
+├── Services/        # AuthService (login/register), SessionManager
+├── ViewModels/      # MVVM ViewModels — one per view
+└── Views/           # WPF XAML views + code-behind
 ```
 
----
+## Architecture
 
-## Architecture Overview
-
-### MVVM Architecture
-
-The application follows the MVVM pattern:
-
-* **Models** represent application data
-* **Views** handle UI rendering
-* **ViewModels** contain presentation logic and commands
-
-Views contain minimal code-behind and no business logic.
-
-### Repository Pattern
-
-A generic repository handles common CRUD operations while specialized repositories implement entity-specific behavior.
-
-### Service Layer
-
-Business logic such as authentication and session management is separated into services.
-
-### Navigation System
-
-`MainViewModel` controls navigation using `CurrentViewModel`, while WPF `DataTemplates` automatically map ViewModels to Views.
+This project uses the **MVVM (Model-View-ViewModel)** pattern:
+- **Models** define the database schema
+- **Repositories** abstract all database operations (Repository Pattern)
+- **Services** contain business logic (authentication, session)
+- **ViewModels** expose data and commands to the UI
+- **Views** are purely declarative XAML - no business logic in code-behind
 
 ---
 
-## Application Startup Flow
+## Default Credentials
 
-```text
-App Startup
-    ↓
-Database Creation
-    ↓
-Seed Default Data
-    ↓
-Show Login Window
-    ↓
-Successful Login
-    ↓
-Open Main Dashboard
-```
-
----
-
-## Key Learning Concepts Demonstrated
-
-* WPF desktop development
-* MVVM architecture
-* Entity Framework Core
-* SQLite integration
-* Repository Pattern
-* Async/await programming
-* Authentication systems
-* Dependency organization
-* Data binding and commands
+| Username | Password  | Role  |
+|----------|-----------|-------|
+| admin    | Admin@123 | Admin |
 
 ---
