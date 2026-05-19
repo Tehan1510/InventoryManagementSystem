@@ -19,12 +19,12 @@ This project was designed as an application that demonstrates clean architecture
 
 ## Features
 
-- **Authentication** — Login with BCrypt-hashed passwords, role-based access (Admin/User)
-- **Dashboard** — Live stats: total products, low stock alerts, categories, suppliers, recent transactions
-- **Products** — Full CRUD with SKU, pricing, stock thresholds, category & supplier linking
-- **Categories** — Manage product categories with duplicate name validation
-- **Suppliers** — Manage supplier contacts and details
-- **Stock Transactions** — Record Stock In / Stock Out / Adjustments with automatic quantity updates
+- **Authentication** - Login with BCrypt-hashed passwords, role-based access (Admin/User)
+- **Dashboard** - Live stats: total products, low stock alerts, categories, suppliers, recent transactions
+- **Products** - Full CRUD with SKU, pricing, stock thresholds, category & supplier linking
+- **Categories** - Manage product categories with duplicate name validation
+- **Suppliers** - Manage supplier contacts and details
+- **Stock Transactions** - Record Stock In / Stock Out / Adjustments with automatic quantity updates
 
 ---
 
@@ -53,8 +53,7 @@ dotnet restore
 dotnet build
 dotnet run
 ```
-
-     **OR**
+**OR**
 
 ### Using Visual Studio
 
@@ -70,7 +69,7 @@ dotnet run
    
        **OR**
 
-    Register as a new user
+   - **Register as a new user**
 
 
 > The SQLite database is auto-created at `%LocalAppData%\InventoryApp\inventory.db` on first run.
