@@ -2,67 +2,159 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:InventoryApp.ViewModels"
-        Title="InventoryPro — Login" Width="440" Height="520"
+        xmlns:local="clr-namespace:InventoryApp.Views"
+        Title="InventoryPro — Login"
+        Width="440" SizeToContent="Height"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         Background="{StaticResource BackgroundBrush}">
 
-    <Window.DataContext>
-        <vm:LoginViewModel />
-    </Window.DataContext>
+	<Window.DataContext>
+		<vm:LoginViewModel/>
+	</Window.DataContext>
 
-    <Grid VerticalAlignment="Center">
-        <Border Style="{StaticResource Card}" Width="370">
-            <StackPanel>
-                <TextBlock Text="📦" FontSize="44" HorizontalAlignment="Center"/>
-                <TextBlock Text="InventoryPro" FontSize="26" FontWeight="Bold"
-                           Foreground="{StaticResource TextPrimaryBrush}"
-                           HorizontalAlignment="Center" Margin="0,6,0,4"/>
-                <TextBlock Text="Sign in to your account" FontSize="13"
-                           Foreground="{StaticResource TextSecondaryBrush}"
-                           HorizontalAlignment="Center" Margin="0,0,0,28"/>
+	<Window.Resources>
+		<local:InverseBoolToVisibilityConverter x:Key="InverseBoolToVis"/>
+	</Window.Resources>
 
-                <TextBlock Text="USERNAME" Style="{StaticResource FormLabel}"/>
-                <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource Input}" Margin="0,0,0,16"/>
+	<Grid Margin="0,40,0,40">
+		<Border Style="{StaticResource Card}" Width="370">
+			<StackPanel>
 
-                <TextBlock Text="PASSWORD" Style="{StaticResource FormLabel}"/>
-                <PasswordBox x:Name="PwdBox" Style="{StaticResource PasswordInput}" Margin="0,0,0,8"/>
+				<!-- LOGIN PANEL: visible when IsRegistering = false -->
+				<StackPanel x:Name="LoginPanel"
+                            Visibility="{Binding IsRegistering,
+                                         Converter={StaticResource InverseBoolToVis}}">
+					<TextBlock Text="📦" FontSize="44" HorizontalAlignment="Center"/>
+					<TextBlock Text="InventoryPro" FontSize="26" FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               HorizontalAlignment="Center" Margin="0,6,0,4"/>
+					<TextBlock Text="Sign in to your account" FontSize="13"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               HorizontalAlignment="Center" Margin="0,0,0,28"/>
 
-                <!-- Error: hidden when empty via DataTrigger -->
-                <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource DangerBrush}"
-                           FontSize="13" TextWrapping="Wrap" Margin="0,4,0,12">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ErrorMessage}" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+					<TextBlock Text="USERNAME" Style="{StaticResource FormLabel}"/>
+					<TextBox x:Name="LoginUsernameBox"
+                             Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource Input}" Margin="0,0,0,16"/>
 
-                <Button Height="42" Style="{StaticResource PrimaryButton}"
-                        IsEnabled="{Binding IsNotLoading}" Click="LoginButton_Click"
-                        Margin="0,0,0,16">
-                    <TextBlock>
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="Sign In"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsLoading}" Value="True">
-                                        <Setter Property="Text" Value="Signing in..."/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </Button>
+					<TextBlock Text="PASSWORD" Style="{StaticResource FormLabel}"/>
+					<PasswordBox x:Name="LoginPwdBox"
+                                 Style="{StaticResource PasswordInput}" Margin="0,0,0,8"/>
 
-                <TextBlock Text="Default: admin / Admin@123" FontSize="11"
-                           Foreground="{StaticResource TextSecondaryBrush}"
-                           HorizontalAlignment="Center"/>
-            </StackPanel>
-        </Border>
-    </Grid>
+					<TextBlock Text="{Binding LoginError}"
+                               Foreground="{StaticResource DangerBrush}"
+                               FontSize="13" TextWrapping="Wrap"
+                               Margin="0,4,0,12">
+						<TextBlock.Style>
+							<Style TargetType="TextBlock">
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding LoginError}" Value="">
+										<Setter Property="Visibility" Value="Collapsed"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBlock.Style>
+					</TextBlock>
+
+					<Button x:Name="LoginButton" Height="42"
+                            Style="{StaticResource PrimaryButton}"
+                            IsEnabled="{Binding IsNotLoading}"
+                            Click="LoginButton_Click" Margin="0,0,0,16">
+						<TextBlock Text="Sign In"/>
+					</Button>
+
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+						<TextBlock Text="Don't have an account?" FontSize="12"
+                                   Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,4,0"/>
+						<TextBlock Text="Register" FontSize="12"
+                                   Foreground="{StaticResource PrimaryBrush}"
+                                   Cursor="Hand" MouseLeftButtonUp="ShowRegisterPanel">
+							<TextBlock.Style>
+								<Style TargetType="TextBlock">
+									<Style.Triggers>
+										<Trigger Property="IsMouseOver" Value="True">
+											<Setter Property="TextDecorations" Value="Underline"/>
+										</Trigger>
+									</Style.Triggers>
+								</Style>
+							</TextBlock.Style>
+						</TextBlock>
+					</StackPanel>
+				</StackPanel>
+
+				<!-- REGISTER PANEL: visible when IsRegistering = true -->
+				<StackPanel x:Name="RegisterPanel"
+                            Visibility="{Binding IsRegistering,
+                                         Converter={StaticResource BoolToVis}}">
+					<TextBlock Text="📦" FontSize="44" HorizontalAlignment="Center"/>
+					<TextBlock Text="Create Account" FontSize="24" FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               HorizontalAlignment="Center" Margin="0,6,0,4"/>
+					<TextBlock Text="Fill in the details below to register" FontSize="13"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               HorizontalAlignment="Center" Margin="0,0,0,24"/>
+
+					<TextBlock Text="USERNAME *" Style="{StaticResource FormLabel}"/>
+					<TextBox x:Name="RegUsernameBox"
+                             Text="{Binding RegUsername, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource Input}" Margin="0,0,0,16"/>
+
+					<TextBlock Text="EMAIL (optional)" Style="{StaticResource FormLabel}"/>
+					<TextBox x:Name="RegEmailBox"
+                             Text="{Binding RegEmail, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource Input}" Margin="0,0,0,16"/>
+
+					<TextBlock Text="PASSWORD *" Style="{StaticResource FormLabel}"/>
+					<PasswordBox x:Name="RegPwdBox"
+                                 Style="{StaticResource PasswordInput}" Margin="0,0,0,16"/>
+
+					<TextBlock Text="CONFIRM PASSWORD *" Style="{StaticResource FormLabel}"/>
+					<PasswordBox x:Name="RegConfirmPwdBox"
+                                 Style="{StaticResource PasswordInput}" Margin="0,0,0,8"/>
+
+					<TextBlock Text="{Binding RegError}"
+                               Foreground="{StaticResource DangerBrush}"
+                               FontSize="13" TextWrapping="Wrap"
+                               Margin="0,4,0,8">
+						<TextBlock.Style>
+							<Style TargetType="TextBlock">
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding RegError}" Value="">
+										<Setter Property="Visibility" Value="Collapsed"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBlock.Style>
+					</TextBlock>
+
+					<TextBlock Text="{Binding RegSuccess}"
+                               Foreground="{StaticResource SuccessBrush}"
+                               FontSize="13" TextWrapping="Wrap"
+                               Margin="0,4,0,8">
+						<TextBlock.Style>
+							<Style TargetType="TextBlock">
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding RegSuccess}" Value="">
+										<Setter Property="Visibility" Value="Collapsed"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBlock.Style>
+					</TextBlock>
+
+					<Button x:Name="RegisterButton" Height="42"
+                            Style="{StaticResource PrimaryButton}"
+                            IsEnabled="{Binding IsNotLoading}"
+                            Click="RegisterButton_Click" Margin="0,0,0,12">
+						<TextBlock Text="Create Account"/>
+					</Button>
+
+					<Button Content="Back to Sign In"
+                            Style="{StaticResource SecondaryButton}"
+                            Height="38" Click="ShowLoginPanel"/>
+				</StackPanel>
+
+			</StackPanel>
+		</Border>
+	</Grid>
 </Window>

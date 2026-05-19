@@ -12,13 +12,17 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // OnExplicitShutdown is set in App.xaml so that closing LoginWindow
+        // after opening MainWindow (or vice-versa) does not terminate the process.
+        // We call Shutdown() explicitly only on error or when the last window closes via logout.
         try
         {
-            // Creates inventory.db and all tables on first run
+            // Create inventory.db and all tables on first run
             using var ctx = new AppDbContext();
             await ctx.Database.EnsureCreatedAsync();
 
-            // Seed admin account on first run
+            // Seed admin account when the Users table is empty
             if (!await ctx.Users.AnyAsync())
                 await new AuthService(new UserRepository())
                     .RegisterAsync("admin", "admin@inventory.com", "Admin@123", "Admin");
